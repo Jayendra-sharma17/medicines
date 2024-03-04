@@ -1,0 +1,120 @@
+from django.shortcuts import render
+from .models import *
+from django.shortcuts import render
+from django.contrib import messages
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
+from rest_framework.response import Response
+# Create your views here.
+from .serializers import *
+from rest_framework.views import APIView
+from .models import Medicine
+
+from django.http import HttpResponse
+from .db_conn import conn
+
+db = conn['Medicine_data']
+collection = db['Medicine_collection']
+
+#database for medicine and connectivity with mongodb 
+
+class MedicineAPI(APIView):
+    
+    def post(self,request):
+        data=request.data
+        serializer=MedicineSerializer(data=data)
+        print(data)
+        
+       
+        if not serializer.is_valid():
+              
+              print(serializer.errors)
+              return Response({'status':403,'erorors':serializer.errors,'message':'something went wrong ❌ '})
+        
+        serializer.save()
+            # print(data)
+        collection.insert_one(serializer.data)
+        return Response({'status':200,'payload':serializer.data,'message':'your Medicine data is saved successfully 🎊'})
+            
+
+    def get(self, request, medicine_id=None):
+        if medicine_id is not None:
+            data=collection.find_one({"medicine_id":medicine_id})
+            serializer=MedicineSerializer(data)
+            return Response({'payload':serializer.data})
+ 
+        else:    
+            data = collection.find()
+            serializer = MedicineSerializer(data, many=True)
+            return Response({'status': 200, 'payload': serializer.data})
+
+
+    def put(self,request,medicine_id):
+        prev_data=collection.find_one({"medicine_id":medicine_id})
+        
+        print(prev_data)
+        data=request.data
+        serializer=MedicineSerializer(data=data)
+        if not serializer.is_valid():
+
+            return Response({"status":403,"message":serializer.errors})
+        
+        new_data={"$set":serializer.data}
+        collection.update_one(prev_data,new_data)
+
+        return Response({"data":serializer.data,'message':'your Medicine data is updated successfully 🎊'})
+    
+
+    def delete(self,request,medicine_id):
+        collection.delete_one({"medicine_id":medicine_id})
+        return Response("data is deleted successfully")
+    
+# database for customer and connectivity with postgresql Customer_data
+   
+class CustomerAPI(APIView):
+    def get(self,request):
+        obj=Customer_data.objects.all()
+        serializer = Customer_dataSerializer(obj , many=True)
+        return Response({"data" : serializer.data})   
+
+    
+    def post(self,request):
+        data=request.data
+        serializer=Customer_dataSerializer(data=request.data)
+        if not serializer.is_valid():
+
+              
+            print(serializer.errors)
+            return Response({'status':403,'erorors':serializer.errors,'message':'something went wrong'})
+            
+        serializer.save()
+            # print(data)
+        return Response({'status':200,'payload':serializer.data,'message':'your data is saved successfully'})
+    
+    def put(self,request,id):
+        
+        data = request.data
+        query_set = Customer_data.objects.get(id=id)
+        serializer = Customer_dataSerializer(query_set , data = data)
+        if not serializer.is_valid():
+            return Response({"status" : 400 , "message" : serializer.errors})
+
+        serializer.save()
+        return Response({"data" : serializer.data})
+    
+    def delete(self,request,id):
+        query_set = Customer_data.objects.get(id = id)
+        serializer = Customer_dataSerializer(query_set)
+        query_set.delete()
+        return Response({"data" : serializer.data,'message':"data is deleted"})
+    
+    def get(self,request,id):
+        
+        query_set = Customer_data.objects.get(id=id)
+        serializer = Customer_dataSerializer(query_set)
+        return Response({"data" : serializer.data})
+        
+    
+
+
+
+    
