@@ -71,12 +71,7 @@ class MedicineAPI(APIView):
 # database for customer and connectivity with postgresql Customer_data
    
 class CustomerAPI(APIView):
-    def get(self,request):
-        obj=Customer_data.objects.all()
-        serializer = Customer_dataSerializer(obj , many=True)
-        return Response({"data" : serializer.data})   
 
-    
     def post(self,request):
         data=request.data
         serializer=Customer_dataSerializer(data=request.data)
@@ -107,14 +102,16 @@ class CustomerAPI(APIView):
         query_set.delete()
         return Response({"data" : serializer.data,'message':"data is deleted"})
     
-    def get(self,request,id):
-        
-        query_set = Customer_data.objects.get(id=id)
-        serializer = Customer_dataSerializer(query_set)
-        return Response({"data" : serializer.data})
-        
-    
 
-
+    def get(self, request,id=None):
+        if id is not None:
+            query_set = Customer_data.objects.get(id=id)
+            serializer = Customer_dataSerializer(query_set)
+            return Response({"data" : serializer.data})
+ 
+        else:    
+            obj=Customer_data.objects.all()
+            serializer = Customer_dataSerializer(obj , many=True)
+            return Response({"data" : serializer.data}) 
 
     
