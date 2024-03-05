@@ -36,7 +36,7 @@ class Customer_data(Baseclass):
     cust_dateofvisit=models.DateTimeField(default=" ")
     cust_address=models.CharField(default=" ",max_length=255)
     medicine_quant=models.CharField(default=" ",max_length=255)
-    cust_phn=models.IntegerField(default=9999999999)
+    cust_phn=models.IntegerField(default=1)
     cust_gender=models.CharField(default=None,max_length=255)
     cust_dob=models.DateField(default=" ")
     cust_email=models.EmailField(default=" ")

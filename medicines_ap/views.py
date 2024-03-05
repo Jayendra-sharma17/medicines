@@ -11,13 +11,22 @@ from .models import Medicine
 
 from django.http import HttpResponse
 from .db_conn import conn
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 db = conn['Medicine_data']
 collection = db['Medicine_collection']
 
 #database for medicine and connectivity with mongodb 
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class MedicineAPI(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+    
     
     def post(self,request):
         data=request.data
@@ -36,9 +45,9 @@ class MedicineAPI(APIView):
         return Response({'status':200,'payload':serializer.data,'message':'your Medicine data is saved successfully 🎊'})
             
 
-    def get(self, request, medicine_id=None):
-        if medicine_id is not None:
-            data=collection.find_one({"medicine_id":medicine_id})
+    def get(self, request, id=None):
+        if id is not None:
+            data=collection.find_one({"id":id})
             serializer=MedicineSerializer(data)
             return Response({'payload':serializer.data})
  
@@ -48,8 +57,8 @@ class MedicineAPI(APIView):
             return Response({'status': 200, 'payload': serializer.data})
 
 
-    def put(self,request,medicine_id):
-        prev_data=collection.find_one({"medicine_id":medicine_id})
+    def put(self,request,id):
+        prev_data=collection.find_one({"id":id})
         
         print(prev_data)
         data=request.data
@@ -64,17 +73,22 @@ class MedicineAPI(APIView):
         return Response({"data":serializer.data,'message':'your Medicine data is updated successfully 🎊'})
     
 
-    def delete(self,request,medicine_id):
-        collection.delete_one({"medicine_id":medicine_id})
+    def delete(self,request,id):
+        collection.delete_one({"id":id})
         return Response("data is deleted successfully")
     
 # database for customer and connectivity with postgresql Customer_data
-   
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 class CustomerAPI(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
 
     def post(self,request):
         data=request.data
-        serializer=Customer_dataSerializer(data=request.data)
+        serializer=Customer_dataSerializer(data=data)
         if not serializer.is_valid():
 
               
@@ -82,7 +96,7 @@ class CustomerAPI(APIView):
             return Response({'status':403,'erorors':serializer.errors,'message':'something went wrong'})
             
         serializer.save()
-            # print(data)
+       
         return Response({'status':200,'payload':serializer.data,'message':'your data is saved successfully'})
     
     def put(self,request,id):
