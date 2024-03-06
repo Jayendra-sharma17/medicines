@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    # environment:
+    #   - DB_URI=mongodb://localhost:27017
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - mongodb
+
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=Customer_data
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=jayendra1017
+
+  mongodb:
+    image: mongo
+    volumes: 
+      - ./data/mongo:/data/db
+    ports:
+      - 27017:27017

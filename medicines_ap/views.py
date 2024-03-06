@@ -41,18 +41,21 @@ class MedicineAPI(APIView):
         
         serializer.save()
             # print(data)
-        collection.insert_one(serializer.data)
+        # Medicine.objects.create(serializer.data)
         return Response({'status':200,'payload':serializer.data,'message':'your Medicine data is saved successfully 🎊'})
             
 
     def get(self, request, id=None):
         if id is not None:
-            data=collection.find_one({"id":id})
-            serializer=MedicineSerializer(data)
-            return Response({'payload':serializer.data})
+            query_set = Medicine.objects.get(id=id)
+            serializer = MedicineSerializer(query_set)
+            return Response({"data" : serializer.data})
+            # data=collection.find_one({"id":id})
+            # serializer=MedicineSerializer(data)
+            # return Response({'payload':serializer.data})
  
         else:    
-            data = collection.find()
+            data = Medicine.objects.all()
             serializer = MedicineSerializer(data, many=True)
             return Response({'status': 200, 'payload': serializer.data})
 
@@ -74,8 +77,10 @@ class MedicineAPI(APIView):
     
 
     def delete(self,request,id):
-        collection.delete_one({"id":id})
-        return Response("data is deleted successfully")
+        query_set = Medicine.objects.get(id = id)
+        serializer = MedicineSerializer(query_set)
+        query_set.delete()
+        return Response({"data" : serializer.data,'message':"data is deleted"})
     
 # database for customer and connectivity with postgresql Customer_data
 from rest_framework.authentication import TokenAuthentication

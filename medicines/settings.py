@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from pymongo import MongoClient
+# from djongo import connect
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -134,14 +135,30 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sammy',
+        'NAME': 'Customer_data',
         'USER':'postgres',  
-        'PASSWORD':'Jayendra1017',  
-        'HOST':'localhost',  
-        'PORT':'5432'  
+        'PASSWORD':'jayendra1017',  
+       'HOST': 'db',
+        'PORT': 5432
     }
 }
+mongo_client = MongoClient('mongodb://127.0.0.1:27017/')
+mongo_db = mongo_client['Medicine_data']
 
+DJONGO_DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': False,  # Set to True if you want to enforce schema validation
+        'NAME': 'Medicine_data',  # Same as the MongoDB database name
+        'CLIENT': {
+            'host': 'mongodb://127.0.0.1:27017/',
+            'username': '',  # Add if authentication is required
+            'password': '',  # Add if authentication is required
+            # 'authSource': 'admin',  # Add if authentication is required
+            # 'authMechanism': 'SCRAM-SHA-1'  # Add if authentication is required
+        }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
