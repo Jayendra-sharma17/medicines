@@ -55,6 +55,7 @@ class MedicineAPI(APIView):
             data = collection.find()
             serializer = MedicineSerializer(data, many=True)
             return Response({'status': 200, 'payload': serializer.data})
+      
 
 
     def put(self,request,id):
