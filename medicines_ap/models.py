@@ -41,7 +41,7 @@ class Customer_data(Baseclass):
     cust_dob=models.DateField(default=" ")
     cust_email=models.EmailField(default=" ")
     class Meta:
-        db_table="customer_data_table"
+        db_table="postgres"
     
 
 

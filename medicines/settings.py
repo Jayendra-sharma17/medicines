@@ -132,34 +132,50 @@ SIMPLE_JWT = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER':'postgres',  
+#         'PASSWORD':'jayendra1017',  
+#        'HOST': 'postgres',
+#         'PORT': 5432
+#     }
+# }
+# mongo_client = MongoClient('mongodb://127.0.0.1:27017/')
+# mongo_db = mongo_client['Medicine_data']
+
+# DJONGO_DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'ENFORCE_SCHEMA': False,  # Set to True if you want to enforce schema validation
+#         'NAME': 'Medicine_data',  # Same as the MongoDB database name
+#         'CLIENT': {
+#             'host': 'mongodb://127.0.0.1:27017/',
+#             'username': '',  # Add if authentication is required
+#             'password': '',  # Add if authentication is required
+#             # 'authSource': 'admin',  # Add if authentication is required
+#             # 'authMechanism': 'SCRAM-SHA-1'  # Add if authentication is required
+#         }
+#     }
+# }
+import os
+DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Customer_data',
-        'USER':'postgres',  
-        'PASSWORD':'jayendra1017',  
-       'HOST': 'db',
-        'PORT': 5432
-    }
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+    },
+    # 'mongo': {
+    #       'ENGINE': 'djongo',
+    #       'NAME': 'medicine_shop',
+    #       "HOST" : 'mongo' ,
+    #       "PORT" : 27017
+    #   }
 }
-mongo_client = MongoClient('mongodb://127.0.0.1:27017/')
-mongo_db = mongo_client['Medicine_data']
-
-DJONGO_DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': False,  # Set to True if you want to enforce schema validation
-        'NAME': 'Medicine_data',  # Same as the MongoDB database name
-        'CLIENT': {
-            'host': 'mongodb://127.0.0.1:27017/',
-            'username': '',  # Add if authentication is required
-            'password': '',  # Add if authentication is required
-            # 'authSource': 'admin',  # Add if authentication is required
-            # 'authMechanism': 'SCRAM-SHA-1'  # Add if authentication is required
-        }
-    }
-}
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

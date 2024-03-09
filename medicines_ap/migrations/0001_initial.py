@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Customer_data',
+            name='postgres',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False, unique=True)),
                 ('cust_name', models.CharField(default='none', max_length=200)),
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('cust_email', models.EmailField(default=' ', max_length=254)),
             ],
             options={
-                'db_table': 'Customer_data_table',
+                'db_table': 'postgres',
             },
         ),
         migrations.CreateModel(

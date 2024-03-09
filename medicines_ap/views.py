@@ -8,12 +8,15 @@ from rest_framework.response import Response
 from .serializers import *
 from rest_framework.views import APIView
 from .models import Medicine
-
+from pymongo import MongoClient
 from django.http import HttpResponse
 from .db_conn import conn
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
+import os
 
+MONGO_URI = os.getenv('MONGO_URI')
+client = MongoClient(MONGO_URI)
 db = conn['Medicine_data']
 collection = db['Medicine_collection']
 
@@ -42,20 +45,21 @@ class MedicineAPI(APIView):
         serializer.save()
             # print(data)
         # Medicine.objects.create(serializer.data)
+        collection.insert_one(serializer.data)
         return Response({'status':200,'payload':serializer.data,'message':'your Medicine data is saved successfully 🎊'})
             
 
     def get(self, request, id=None):
         if id is not None:
-            query_set = Medicine.objects.get(id=id)
-            serializer = MedicineSerializer(query_set)
-            return Response({"data" : serializer.data})
-            # data=collection.find_one({"id":id})
-            # serializer=MedicineSerializer(data)
-            # return Response({'payload':serializer.data})
+            # query_set = Medicine.objects.get(id=id)
+            # serializer = MedicineSerializer(query_set)
+            # return Response({"data" : serializer.data})
+            data=collection.find_one({"id":id})
+            serializer=MedicineSerializer(data)
+            return Response({'payload':serializer.data})
  
         else:    
-            data = Medicine.objects.all()
+            data = collection.find()
             serializer = MedicineSerializer(data, many=True)
             return Response({'status': 200, 'payload': serializer.data})
       
@@ -78,9 +82,9 @@ class MedicineAPI(APIView):
     
 
     def delete(self,request,id):
-        query_set = Medicine.objects.get(id = id)
+        query_set =collection.find_one({"uuid":id})
         serializer = MedicineSerializer(query_set)
-        query_set.delete()
+        collection.delete_one({"uuid":id})
         return Response({"data" : serializer.data,'message':"data is deleted"})
     
 # database for customer and connectivity with postgresql Customer_data
