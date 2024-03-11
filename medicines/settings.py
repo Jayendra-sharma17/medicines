@@ -163,11 +163,11 @@ import os
 DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+        'HOST': "postgres",
+        'NAME': "postgres" ,
+        'USER': "postgres",
+        'PASSWORD': "jayendra1017",
+        'PORT':  5432,
     },
     # 'mongo': {
     #       'ENGINE': 'djongo',

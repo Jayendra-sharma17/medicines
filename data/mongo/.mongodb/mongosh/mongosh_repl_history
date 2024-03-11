@@ -1,0 +1,4 @@
+db.Medicine_collection.find()
+show collections
+use Medicine_data
+show dbs

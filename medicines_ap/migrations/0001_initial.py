@@ -48,8 +48,6 @@ class Migration(migrations.Migration):
                 ('medicine_location', models.CharField(default='hospital', max_length=255)),
                 ('medicine_gst', models.FloatField(default=1.5)),
             ],
-            options={
-                'abstract': False,
-            },
+          
         ),
     ]

@@ -17,7 +17,7 @@ import os
 
 MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
-db = conn['Medicine_data']
+db = client['Medicine_data']
 collection = db['Medicine_collection']
 
 #database for medicine and connectivity with mongodb 
@@ -51,9 +51,7 @@ class MedicineAPI(APIView):
 
     def get(self, request, id=None):
         if id is not None:
-            # query_set = Medicine.objects.get(id=id)
-            # serializer = MedicineSerializer(query_set)
-            # return Response({"data" : serializer.data})
+            
             data=collection.find_one({"id":id})
             serializer=MedicineSerializer(data)
             return Response({'payload':serializer.data})
