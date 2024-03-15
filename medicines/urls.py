@@ -25,10 +25,13 @@ from rest_framework_simplejwt.views import (
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('MedicineAPI/',MedicineAPI.as_view(),name='MedicineAPI'),
-    path('MedicineAPI/<id>/',MedicineAPI.as_view(), name='MedicineAPI'),
-    path('CustomerAPI/',CustomerAPI.as_view(),name='CustomerAPI'),
-    path('CustomerAPI/<uuid:id>/', CustomerAPI.as_view(), name='CustomerAPI'),
+    path('medicineAPI/',MedicineAPI.as_view(),name='MedicineAPI'),
+    # path('medicineAPI/<id>/',MedicineAPI.as_view(), name='MedicineAPI'),
+    path('medicineAPI/<str:_id>/',MedicineAPI.as_view(),name='MedicineAPI'),
+
+    
+    path('customerAPI/',CustomerAPI.as_view(),name='CustomerAPI'),
+    path('customerAPI/<uuid:id>/', CustomerAPI.as_view(), name='CustomerAPI'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
